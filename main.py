@@ -55,6 +55,14 @@ from games.admin import (
 # =========================================
 import os
 
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    CallbackQueryHandler,
+    MessageHandler,
+    filters
+)
+
 TOKEN = os.getenv(
     "BOT_TOKEN"
 )
