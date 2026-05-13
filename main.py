@@ -53,8 +53,11 @@ from games.admin import (
 # =========================================
 # BOT TOKEN
 # =========================================
-TOKEN = "8861836709:AAFUdnXptSJuHtwaQDGH6u-T6g5F3C40RP8"
+import os
 
+TOKEN = os.getenv(
+    "BOT_TOKEN"
+)
 # =========================================
 # CREATE APP
 # =========================================
