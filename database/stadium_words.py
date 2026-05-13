@@ -1,0 +1,28 @@
+STADIUM_WORDS = [
+
+    ("Wankhede Stadium", "Eden Gardens"),
+    ("Chepauk", "Chinnaswamy"),
+    ("Narendra Modi Stadium", "Wankhede"),
+    ("Arun Jaitley Stadium", "Ekana Stadium"),
+    ("Old Trafford", "Lords"),
+    ("MCG", "SCG"),
+    ("The Oval", "Lords"),
+    ("Centurion", "Newlands"),
+    ("Perth Stadium", "Gabba"),
+    ("M Chinnaswamy Stadium", "Hyderabad Stadium"),
+    ("Eden Gardens", "Chepauk"),
+    ("Sawai Mansingh Stadium", "Ekana Stadium"),
+    ("Green Park", "Holkar Stadium"),
+    ("Rajiv Gandhi Stadium", "Wankhede"),
+    ("Trent Bridge", "Headingley"),
+    ("Adelaide Oval", "Melbourne Cricket Ground"),
+    ("Basin Reserve", "Eden Park"),
+    ("Sharjah Stadium", "Dubai Stadium"),
+    ("Kingsmead", "St George's Park"),
+    ("Bharat Ratna Shri Atal Bihari Vajpayee Stadium", "Mohali Stadium"),
+    ("Chepauk", "MA Chidambaram Stadium"),
+    ("Feroz Shah Kotla", "Arun Jaitley Stadium"),
+    ("Gabba", "Perth Stadium"),
+    ("SCG", "Adelaide Oval"),
+    ("Lords", "The Oval")
+]
