@@ -1,4 +1,39 @@
-from database.db import (
+from database.db import conn, cursor
+
+# =========================================
+# CREATE USER
+# =========================================
+def create_user(user_id):
+
+    cursor.execute(
+        "SELECT * FROM users WHERE user_id = ?",
+        (user_id,)
+    )
+
+    user = cursor.fetchone()
+
+    if user is None:
+
+        cursor.execute(
+            "INSERT INTO users (user_id) VALUES (?)",
+            (user_id,)
+        )
+
+        conn.commit()
+
+
+# =========================================
+# GET BALANCE
+# =========================================
+def get_balance(user_id):
+
+    create_user(user_id)
+
+    cursor.execute(
+        "SELECT balance FROM users WHERE user_id = ?",
+        (user_id,)
+    )
+
     balance = cursor.fetchone()[0]
 
     return balance
