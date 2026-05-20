@@ -1,5 +1,5 @@
 # =========================================
-# ACTIVE MATCH BETS
+# ACTIVE MATCHES
 # =========================================
 
 active_matches = []
@@ -8,13 +8,18 @@ active_matches = []
 # =========================================
 # CREATE MATCH
 # =========================================
-def create_match(team1, team2):
+def create_match(
+
+    team1,
+    team2
+):
 
     match = {
 
         "teams": [
 
             team1.lower(),
+
             team2.lower()
         ],
 
@@ -23,11 +28,13 @@ def create_match(team1, team2):
         "bets": []
     }
 
-    active_matches.append(match)
+    active_matches.append(
+        match
+    )
 
 
 # =========================================
-# FIND MATCH BY TEAM
+# FIND MATCH
 # =========================================
 def find_match(team):
 
@@ -58,7 +65,7 @@ def place_bet(
 
         return False
 
-    # CHECK IF BETTING OPEN
+    # CHECK CLOSED
     if not match["open"]:
 
         return False
@@ -109,6 +116,8 @@ def remove_match(team):
 
         return False
 
-    active_matches.remove(match)
+    active_matches.remove(
+        match
+    )
 
     return True
