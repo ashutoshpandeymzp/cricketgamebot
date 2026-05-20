@@ -47,15 +47,10 @@ from games.imposter import (
 # BETTING SYSTEM
 # =========================================
 from games.betting import (
-
     openbets,
-
     bet,
-
     closebets,
-
     result,
-
     betlist
 )
 
