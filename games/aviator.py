@@ -1,7 +1,8 @@
-from telegram import Update
-from telegram.ext import ContextTypes
-
 import random
+
+from telegram import Update
+
+from telegram.ext import ContextTypes
 
 from database.users import (
     create_user,
@@ -10,21 +11,39 @@ from database.users import (
     remove_coins
 )
 
-
-async def fly(update: Update, context: ContextTypes.DEFAULT_TYPE):
+# =========================================
+# AVIATOR GAME
+# =========================================
+async def fly(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
 
     user = update.effective_user
 
     create_user(user.id)
 
+    # =========================================
+    # CHECK ARGUMENTS
+    # =========================================
     if len(context.args) < 2:
 
         await update.message.reply_text(
-            "Usage:\n/fly 500 5"
+
+            "Usage:\n"
+
+            "/fly amount multiplier\n\n"
+
+            "Example:\n"
+
+            "/fly 500 2.5"
         )
 
         return
 
+    # =========================================
+    # GET BET
+    # =========================================
     try:
 
         amount = int(context.args[0])
@@ -34,67 +53,156 @@ async def fly(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except:
 
         await update.message.reply_text(
-            "Enter valid input"
+            "❌ Invalid amount or multiplier"
         )
 
         return
 
+    # =========================================
+    # VALIDATE
+    # =========================================
     if amount <= 0:
 
         await update.message.reply_text(
-            "Bet amount must be greater than 0"
+            "❌ Bet must be greater than 0"
         )
 
         return
 
-    if target < 1.1:
+    if target < 1.01:
 
         await update.message.reply_text(
-            "Multiplier must be at least 1.1x"
+            "❌ Multiplier too low"
         )
 
         return
 
-    if get_balance(user.id) < amount:
+    # =========================================
+    # CHECK BALANCE
+    # =========================================
+    balance = get_balance(user.id)
+
+    if balance < amount:
 
         await update.message.reply_text(
-            "❌ Not enough coins"
+
+            f"❌ Not enough balance\n\n"
+
+            f"💰 Balance: {balance}"
         )
 
         return
 
-    crash = round(
-        random.uniform(1.1, 10.0),
-        2
+    # =========================================
+    # REMOVE BET
+    # =========================================
+    remove_coins(
+        user.id,
+        amount
     )
 
-    # WIN
-    if target < crash:
+    # =========================================
+    # WEIGHTED CRASH SYSTEM
+    # =========================================
 
-        winnings = int(amount * target)
+    chance = random.randint(1, 100)
 
-        add_coins(
-            user.id,
-            winnings
+    # 50% UNDER 2x
+    if chance <= 50:
+
+        crash = round(
+            random.uniform(1.00, 1.99),
+            2
         )
 
-        await update.message.reply_text(
-            f"✈️ Plane Flew Till: {crash}x\n\n"
-            f"🎉 Cashed Out at {target}x\n"
-            f"💰 Won {winnings} coins\n"
-            f"🏦 Balance: {get_balance(user.id)}"
+    # 30% BETWEEN 2x-3x
+    elif chance <= 80:
+
+        crash = round(
+            random.uniform(2.00, 3.00),
+            2
         )
 
-    # LOSE
+    # 10% BETWEEN 3x-10x
+    elif chance <= 90:
+
+        crash = round(
+            random.uniform(3.00, 10.00),
+            2
+        )
+
+    # 10% ABOVE 10x
     else:
 
-        remove_coins(
+        crash = round(
+            random.uniform(10.00, 50.00),
+            2
+        )
+
+    # =========================================
+    # WIN
+    # =========================================
+    if crash >= target:
+
+        # PURE PROFIT
+        profit = int(
+            amount * (target - 1)
+        )
+
+        # RETURN BET + PROFIT
+        add_coins(
             user.id,
-            amount
+            amount + profit
+        )
+
+        new_balance = get_balance(
+            user.id
+        )
+
+        # BIG FLIGHT
+        if crash >= 10:
+
+            await update.message.reply_text(
+
+                f"🔥 MASSIVE FLIGHT!\n\n"
+
+                f"✈️ Crashed at: {crash}x\n"
+
+                f"🎯 Your Cashout: {target}x\n\n"
+
+                f"✅ Profit: {profit} coins\n\n"
+
+                f"💰 Balance: {new_balance}"
+            )
+
+        # NORMAL WIN
+        else:
+
+            await update.message.reply_text(
+
+                f"✈️ Plane Flew to {crash}x\n\n"
+
+                f"🎯 Your Cashout: {target}x\n\n"
+
+                f"✅ Profit: {profit} coins\n\n"
+
+                f"💰 Balance: {new_balance}"
+            )
+
+    # =========================================
+    # LOSS
+    # =========================================
+    else:
+
+        new_balance = get_balance(
+            user.id
         )
 
         await update.message.reply_text(
+
             f"💥 Plane Crashed at {crash}x\n\n"
-            f"💀 Lost {amount} coins\n"
-            f"🏦 Balance: {get_balance(user.id)}"
+
+            f"❌ You lost {amount} coins\n\n"
+
+            f"💰 Balance: {new_balance}"
         )
