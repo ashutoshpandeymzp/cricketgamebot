@@ -44,25 +44,7 @@ async def is_admin(
 
     user = update.effective_user
 
-    # BOT ADMIN
-    if user.id in BOT_ADMINS:
-
-        return True
-
-    # GROUP ADMIN
-    member = await context.bot.get_chat_member(
-
-        update.effective_chat.id,
-
-        user.id
-    )
-
-    return member.status in [
-
-        "administrator",
-
-        "creator"
-    ]
+    return user.id in BOT_ADMINS
 
 
 # =========================================
@@ -97,6 +79,15 @@ async def openbets(
     team1 = context.args[0].lower()
 
     team2 = context.args[1].lower()
+
+    # CHECK EXISTING
+    if find_match(team1) or find_match(team2):
+
+        await update.message.reply_text(
+            "❌ Match already exists"
+        )
+
+        return
 
     # CREATE MATCH
     create_match(
@@ -192,7 +183,7 @@ async def bet(
     except:
 
         await update.message.reply_text(
-            "Invalid amount"
+            "❌ Invalid amount"
         )
 
         return
@@ -201,7 +192,7 @@ async def bet(
     if amount <= 0:
 
         await update.message.reply_text(
-            "Amount must be greater than 0"
+            "❌ Amount must be greater than 0"
         )
 
         return
@@ -391,7 +382,8 @@ async def result(
 
             winners.append(
 
-                f"• {bet_data['amount']} → {winnings}"
+                f"• User {bet_data['user_id']} "
+                f"won {winnings}"
             )
 
     text = (
