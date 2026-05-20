@@ -1,3 +1,5 @@
+import os
+
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -34,12 +36,27 @@ from games.blackjack import (
 # =========================================
 from games.imposter import (
     startgame,
-    guess,
     join_button,
     leave_button,
     start_button,
     auto_hint,
     vote_button
+)
+
+# =========================================
+# BETTING SYSTEM
+# =========================================
+from games.betting import (
+
+    openbets,
+
+    bet,
+
+    closebets,
+
+    result,
+
+    betlist
 )
 
 # =========================================
@@ -53,19 +70,10 @@ from games.admin import (
 # =========================================
 # BOT TOKEN
 # =========================================
-import os
-
-from telegram.ext import (
-    ApplicationBuilder,
-    CommandHandler,
-    CallbackQueryHandler,
-    MessageHandler,
-    filters
-)
-
 TOKEN = os.getenv(
     "BOT_TOKEN"
 )
+
 # =========================================
 # CREATE APP
 # =========================================
@@ -146,19 +154,50 @@ app.add_handler(
 )
 
 # =========================================
+# BETTING COMMANDS
+# =========================================
+app.add_handler(
+    CommandHandler(
+        "openbets",
+        openbets
+    )
+)
+
+app.add_handler(
+    CommandHandler(
+        "bet",
+        bet
+    )
+)
+
+app.add_handler(
+    CommandHandler(
+        "closebets",
+        closebets
+    )
+)
+
+app.add_handler(
+    CommandHandler(
+        "result",
+        result
+    )
+)
+
+app.add_handler(
+    CommandHandler(
+        "betlist",
+        betlist
+    )
+)
+
+# =========================================
 # IMPOSTER COMMANDS
 # =========================================
 app.add_handler(
     CommandHandler(
         "startgame",
         startgame
-    )
-)
-
-app.add_handler(
-    CommandHandler(
-        "guess",
-        guess
     )
 )
 
